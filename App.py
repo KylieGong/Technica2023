@@ -36,12 +36,6 @@ class WasteInput(Screen):
         self.wastegreeting = Label(text="Input your waste here: ", color = "000000", font_size = 18)
         self.window.add_widget(self.wastegreeting)
 
-        # landfill
-        self.landfill_lbl = Label(text="Landfill: ", font_size = 15, color = "000000")
-        self.window.add_widget(self.landfill_lbl)
-        self.landfill = TextInput(multiline = False, size_hint = (1, 0.5))
-        self.window.add_widget(self.landfill)
-
         # recycle
         self.recycle_lbl = Label(text="Recycle: ", font_size = 15, color = "000000")
         self.window.add_widget(self.recycle_lbl)
@@ -54,8 +48,13 @@ class WasteInput(Screen):
         self.compost = TextInput(multiline = False, size_hint = (1, 0.5))
         self.window.add_widget(self.compost)
 
-    
+        # landfill
+        self.landfill_lbl = Label(text="Landfill: ", font_size = 15, color = "000000")
+        self.window.add_widget(self.landfill_lbl)
+        self.landfill = TextInput(multiline = False, size_hint = (1, 0.5))
+        self.window.add_widget(self.landfill)
 
+        # buttons
         self.throw = Button(text="Throw Away", color = "000000", size_hint = (0.9, 0.5), bold = True, background_color = "99BB55", background_normal = "")
         self.throw.bind(on_release=self.throwAway)
         self.window.add_widget(self.throw)
@@ -108,6 +107,7 @@ class WasteInput(Screen):
 class History(Screen):
     def __init__(self, **kwargs):
         super(History, self).__init__(**kwargs)
+
         MainBox = BoxLayout(orientation='vertical', padding=50)
 
         toWasteInput = Button(text="Input Waste", color = "000000", bold = True, background_color = "BFDF8E", background_normal = "")
