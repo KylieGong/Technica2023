@@ -28,38 +28,40 @@ class WasteInput(Screen):
         self.window.size_hint = (0.8, 0.8)
         self.window.pos_hint = {"center_x": 0.5, "center_y":0.5}
         # RGBA format, (R, G, B, A) same as rgb but a is opacity
-        Window.clearcolor = (170/255, 170/255, 136/255, 1)
+        Window.clearcolor = (242/255, 240/255, 204/255, 1)
 
         # add widgets
         self.window.add_widget(Image(source="Placeholder.png"))
 
-        self.wastegreeting = Label(text="Input your waste here: ")
+        self.wastegreeting = Label(text="Input your waste here: ", color = "000000", font_size = 18)
         self.window.add_widget(self.wastegreeting)
 
         # landfill
-        self.landfill_lbl = Label(text="Landfill: ", font_size = 15, color = "4B3D2A")
+        self.landfill_lbl = Label(text="Landfill: ", font_size = 15, color = "000000")
         self.window.add_widget(self.landfill_lbl)
         self.landfill = TextInput(multiline = False, size_hint = (1, 0.5))
         self.window.add_widget(self.landfill)
 
         # recycle
-        self.recycle_lbl = Label(text="Recycle: ", font_size = 15, color = "4B3D2A")
+        self.recycle_lbl = Label(text="Recycle: ", font_size = 15, color = "000000")
         self.window.add_widget(self.recycle_lbl)
         self.recycle = TextInput(multiline = False, size_hint = (1, 0.5))
         self.window.add_widget(self.recycle)
 
         # compost
-        self.compost_lbl = Label(text="Compost: ", font_size = 15, color = "4B3D2A")
+        self.compost_lbl = Label(text="Compost: ", font_size = 15, color = "000000")
         self.window.add_widget(self.compost_lbl)
         self.compost = TextInput(multiline = False, size_hint = (1, 0.5))
         self.window.add_widget(self.compost)
 
-        self.throw = Button(text="Throw Away", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
-        self.throw.bind(on_press=self.throwAway)
+    
+
+        self.throw = Button(text="Throw Away", color = "000000", size_hint = (0.9, 0.5), bold = True, background_color = "99BB55", background_normal = "")
+        self.throw.bind(on_release=self.throwAway)
         self.window.add_widget(self.throw)
         
-        self.history = Button(text="Check History", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
-        self.history.bind(on_press=self.checkHistory)
+        self.history = Button(text="Check History", color = "000000", size_hint = (0.9, 0.5), bold = True, background_color = "99BB55", background_normal = "")
+        self.history.bind(on_release=self.checkHistory)
         self.window.add_widget(self.history)
         
         self.add_widget(self.window)
@@ -106,48 +108,48 @@ class WasteInput(Screen):
 class History(Screen):
     def __init__(self, **kwargs):
         super(History, self).__init__(**kwargs)
-        MainBox = BoxLayout(orientation='vertical')
+        MainBox = BoxLayout(orientation='vertical', padding=50)
 
-        toWasteInput = Button(text="Input Waste", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
-        toWasteInput.bind(on_press=self.toInput)
-        moreInfoBtn = Button(text="More Information on Waste Disposal", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
-        moreInfoBtn.bind(on_press=self.moreInfo)
+        toWasteInput = Button(text="Input Waste", color = "000000", bold = True, background_color = "BFDF8E", background_normal = "")
+        toWasteInput.bind(on_release=self.toInput)
+        moreInfoBtn = Button(text="Waste Disposal Info", color = "000000", bold = True, background_color = "BFDF8E", background_normal = "")
+        moreInfoBtn.bind(on_release=self.moreInfo)
 
         btnlayout = BoxLayout(orientation='horizontal')
         btnlayout.add_widget(toWasteInput)
         btnlayout.add_widget(moreInfoBtn)
         MainBox.add_widget(btnlayout)
 
-        label = Label(text="Today you have: ")
+        label = Label(text="Today you have: ", color = "000000")
         MainBox.add_widget(label)
 
         # recycle
         r_box = BoxLayout(orientation='horizontal')
-        recycle_lbl = Label(text="Recycled: ")
+        recycle_lbl = Label(text="Recycled: ", color="1d4c00")
         r_box.add_widget(recycle_lbl)
         recycled_layout = BoxLayout(orientation='vertical')
         for k, v in waste["recycle"].items():
-            item = Label(text=f"{k}: {v}")
+            item = Label(text=f"{k}: {v}", color = "1d4c00")
             recycled_layout.add_widget(item)
         r_box.add_widget(recycled_layout)
         
         # landfill
         l_box = BoxLayout(orientation='horizontal')
-        landfill_lbl = Label(text="Trashed: ")
+        landfill_lbl = Label(text="Trashed: ", color = "1d4c00")
         l_box.add_widget(landfill_lbl)
         landfill_layout = BoxLayout(orientation='vertical')
         for k, v in waste["landfill"].items():
-            item = Label(text=f"{k}: {v}")
+            item = Label(text=f"{k}: {v}", color = "1d4c00")
             landfill_layout.add_widget(item)
         l_box.add_widget(landfill_layout)
 
         # compost
         c_box = BoxLayout(orientation='horizontal')
-        compost_lbl = Label(text="Composted: ")
+        compost_lbl = Label(text="Composted: ", color = "4B3D2A")
         c_box.add_widget(compost_lbl)
         composted_layout = BoxLayout(orientation='vertical')
         for k, v in waste["compost"].items():
-            item = Label(text=f"{k}: {v}")
+            item = Label(text=f"{k}: {v}", color = "4B3D2A")
             composted_layout.add_widget(item)
         c_box.add_widget(composted_layout)
         
