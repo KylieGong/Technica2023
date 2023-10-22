@@ -1,18 +1,24 @@
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.core.window import Window
+from kivy.graphics import Line
+from kivy.uix.widget import Widget
 
+import webbrowser
+import json
 from datetime import date
-import re
 import sys
 import os
 
-waste = {}
+waste = {"landfill": {},
+         "recycle": {},
+         "compost": {}}
 
 class WasteInput(Screen):
     def __init__(self, **kwargs):
@@ -60,27 +66,39 @@ class WasteInput(Screen):
     
     def throwAway(self, instance):
         text = []
-        currdate = str(date.today())
-        if currdate in waste:
-            today = waste[currdate]
-            if "recycle" in today:
-                if self.recycle.text in today["recycle"]:
-                    today["recycle"][self.waste.text] += 1
+        # landfill
+        if self.landfill.text:
+            text.append(self.landfill.text)
+            if self.landfill.text in waste["landfill"]:
+                waste["landfill"][self.landfill.text] += 1
             else:
-                today["recycle"][self.recycle.text] = 1
-        else:
-            if self.landfill.text:
-                text.append(self.landfill.text)
-                waste[currdate] = {"landfill": {self.landfill.text:1}}
-            if self.recycle.text:
-                text.append(self.recycle.text)
-                waste[currdate] = {"recycle": {self.recycle.text:1}}
-            if self.compost.text:
-                text.append(self.compost.text)
-                waste[currdate] = {"compost": {self.compost.text:1}}
+                waste["landfill"][self.landfill.text] = 1
+            self.landfill.text = ""
+
+        # recycle
+        if self.recycle.text:
+            text.append(self.recycle.text)
+            if self.recycle.text in waste["recycle"]:
+                waste["recycle"][self.recycle.text] += 1
+            else:
+                waste["recycle"][self.recycle.text] = 1
+            self.recycle.text = ""
+
+        # compost
+        if self.compost.text:
+            text.append(self.compost.text)
+            if self.compost.text in waste["compost"]:
+                waste["compost"][self.compost.text] += 1
+            else:
+                waste["compost"][self.compost.text] = 1
+            self.compost.text = ""
         if text:
-            print(text)
             self.wastegreeting.text = "You just threw away " + ', '.join(text) + "????? How could you!"
+
+            data = json.dumps(waste, indent=4)
+            f = open(currdate+".json", "w")
+            f.write(data)
+            f.close()
 
     def checkHistory(self, instance):
         app.root.current = 'WasteHistory'
@@ -88,8 +106,63 @@ class WasteInput(Screen):
 class History(Screen):
     def __init__(self, **kwargs):
         super(History, self).__init__(**kwargs)
-        label = Label(text="idk")
-        self.add_widget(label)
+        MainBox = BoxLayout(orientation='vertical')
+
+        toWasteInput = Button(text="Input Waste", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
+        toWasteInput.bind(on_press=self.toInput)
+        moreInfoBtn = Button(text="More Information on Waste Disposal", color = "000000", size_hint = (1, 0.5), bold = True, background_color = "BFDF8E", background_normal = "")
+        moreInfoBtn.bind(on_press=self.moreInfo)
+
+        btnlayout = BoxLayout(orientation='horizontal')
+        btnlayout.add_widget(toWasteInput)
+        btnlayout.add_widget(moreInfoBtn)
+        MainBox.add_widget(btnlayout)
+
+        label = Label(text="Today you have: ")
+        MainBox.add_widget(label)
+
+        # recycle
+        r_box = BoxLayout(orientation='horizontal')
+        recycle_lbl = Label(text="Recycled: ")
+        r_box.add_widget(recycle_lbl)
+        recycled_layout = BoxLayout(orientation='vertical')
+        for k, v in waste["recycle"].items():
+            item = Label(text=f"{k}: {v}")
+            recycled_layout.add_widget(item)
+        r_box.add_widget(recycled_layout)
+        
+        # landfill
+        l_box = BoxLayout(orientation='horizontal')
+        landfill_lbl = Label(text="Trashed: ")
+        l_box.add_widget(landfill_lbl)
+        landfill_layout = BoxLayout(orientation='vertical')
+        for k, v in waste["landfill"].items():
+            item = Label(text=f"{k}: {v}")
+            landfill_layout.add_widget(item)
+        l_box.add_widget(landfill_layout)
+
+        # compost
+        c_box = BoxLayout(orientation='horizontal')
+        compost_lbl = Label(text="Composted: ")
+        c_box.add_widget(compost_lbl)
+        composted_layout = BoxLayout(orientation='vertical')
+        for k, v in waste["compost"].items():
+            item = Label(text=f"{k}: {v}")
+            composted_layout.add_widget(item)
+        c_box.add_widget(composted_layout)
+        
+        # add to the main layout
+        MainBox.add_widget(r_box)
+        MainBox.add_widget(c_box)
+        MainBox.add_widget(l_box)
+
+        self.add_widget(MainBox)
+    
+    def toInput(self, instance):
+        app.root.current = 'WasteInput'
+
+    def moreInfo(self, instance):
+        webbrowser.open("https://technica-2023.jlinx11.repl.co/")
 
 class WasteTracker(App):
     def build(self):
@@ -99,14 +172,19 @@ class WasteTracker(App):
         return sm
 
 if __name__ == '__main__':
+    currdate = str(date.today())
+
+    file_name = currdate+".json"
+    if os.path.isfile(file_name):
+        with open(file_name, "r") as file:
+            waste = json.load(file)
+
     app = WasteTracker()
 
     try:
         sys.exit(app.run())
     except SystemExit:
-        f = open("history.txt", "a")
-        for i in waste.keys():
-            f.write(i+"\n")
-            for key, val in waste[i].items():
-                f.write("\t" + key + ": " + str(val) + "\n")
+        data = json.dumps(waste, indent=4)
+        f = open(currdate+".json", "w")
+        f.write(data)
         f.close()
