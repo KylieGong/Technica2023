@@ -31,7 +31,7 @@ class WasteInput(Screen):
         Window.clearcolor = (242/255, 240/255, 204/255, 1)
 
         # add widgets
-        self.window.add_widget(Image(source="Placeholder.png"))
+        self.window.add_widget(Image(source="/home/kylie_gong/Technica/Technica2023/Icons/logo.png", size_hint=(2,2)))
 
         self.wastegreeting = Label(text="Input your waste here: ", color = "000000", font_size = 18)
         self.window.add_widget(self.wastegreeting)
@@ -39,19 +39,19 @@ class WasteInput(Screen):
         # recycle
         self.recycle_lbl = Label(text="Recycle: ", font_size = 15, color = "000000")
         self.window.add_widget(self.recycle_lbl)
-        self.recycle = TextInput(multiline = False, size_hint = (1, 0.5))
+        self.recycle = TextInput(multiline = False, size_hint = (1, 0.6))
         self.window.add_widget(self.recycle)
 
         # compost
         self.compost_lbl = Label(text="Compost: ", font_size = 15, color = "000000")
         self.window.add_widget(self.compost_lbl)
-        self.compost = TextInput(multiline = False, size_hint = (1, 0.5))
+        self.compost = TextInput(multiline = False, size_hint = (1, 0.6))
         self.window.add_widget(self.compost)
 
         # landfill
         self.landfill_lbl = Label(text="Landfill: ", font_size = 15, color = "000000")
         self.window.add_widget(self.landfill_lbl)
-        self.landfill = TextInput(multiline = False, size_hint = (1, 0.5))
+        self.landfill = TextInput(multiline = False, size_hint = (1, 0.6))
         self.window.add_widget(self.landfill)
 
         # buttons
@@ -94,19 +94,23 @@ class WasteInput(Screen):
                 waste["compost"][self.compost.text] = 1
             self.compost.text = ""
         if text:
-            self.wastegreeting.text = "You just threw away " + ', '.join(text) + "????? How could you!"
+            self.wastegreeting.text = "You have thrown away " + ', '.join(text)
 
             data = json.dumps(waste, indent=4)
             f = open(currdate+".json", "w")
             f.write(data)
             f.close()
 
+            print("INPUTTTT" + str(waste))
+
     def checkHistory(self, instance):
         app.root.current = 'WasteHistory'
 
 class History(Screen):
-    def __init__(self, **kwargs):
-        super(History, self).__init__(**kwargs)
+    # def __init__(self, **kwargs):
+    #     super(History, self).__init__(**kwargs)
+    def on_pre_enter(self):
+        global waste
 
         MainBox = BoxLayout(orientation='vertical', padding=50)
 

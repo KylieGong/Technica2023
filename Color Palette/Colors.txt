@@ -1,17 +1,5 @@
-Brown:
-    sRGb: 75 61 42
-    HEX: 4B3D2A
-
-Green:
-    sRGb: 
-    HEX: 
-
-Light Brown:
-    sRGb: 
-    HEX: 
-
-Light Green:
-    sRGb: 
-    HEX: 
-    
-Yellow:
+#F2F0CC yellow (we used it for website background)
+#99BB55 light green (used for subheading 2 background/banner)
+#1d4c00 dark green (used for nav bar and accent color)
+#366410 only used for hover of nav bar (dark green)
+#dfEEAA light green (used for quote background)
