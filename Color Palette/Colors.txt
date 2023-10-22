@@ -1,0 +1,17 @@
+Brown:
+    sRGb: 75 61 42
+    HEX: 4B3D2A
+
+Green:
+    sRGb: 
+    HEX: 
+
+Light Brown:
+    sRGb: 
+    HEX: 
+
+Light Green:
+    sRGb: 
+    HEX: 
+    
+Yellow:
